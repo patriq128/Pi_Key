@@ -1,5 +1,6 @@
 # Pi_Key
 ![Pi\_Main](images/pi-key.png)
+
 Pi_Key is a compact RP2040-powered device designed to look like a USB flash drive while providing the flexibility of a programmable embedded platform.
 
 The device features three status LEDs and a microSD card interface, making it suitable for data logging, portable applications, diagnostics, and custom embedded projects.
