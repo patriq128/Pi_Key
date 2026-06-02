@@ -45,7 +45,7 @@ The device features three status LEDs and a microSD card interface, making it su
 
 The complete hardware schematic can be found below.
 
-![Pi\_Key Front](images/schematic.png)
+![Pi\_Key Front](images/schematic-1.png)
 
 ## Photos
 
