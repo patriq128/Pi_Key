@@ -27,20 +27,25 @@ The device features three status LEDs and a microSD card interface, making it su
 
 ### microSD Card Connections
 
-| SD Card Pin | RP2040 GPIO | Function |
-| ----------- | ----------- | -------- |
-| TBD         | TBD         | MOSI     |
-| TBD         | TBD         | MISO     |
-| TBD         | TBD         | SCK      |
-| TBD         | TBD         | CS       |
+| SD Card Pin | RP2040 GPIO |
+| ----------- | ----------- |
+| MOSI        | 3           |
+| MISO        | 4           |
+| SCK         | 2           |
+| CS          | 5         |
+
+### Button Connection
+
+| BUTTON | GPIO 15 |
+
 
 ### LED Connections
 
-| LED   | RP2040 GPIO | Description        |
-| ----- | ----------- | ------------------ |
-| LED 1 | TBD         | Status Indicator   |
-| LED 2 | TBD         | Activity Indicator |
-| LED 3 | TBD         | Error Indicator    |
+| LED   | RP2040 GPIO |
+| ----- | ----------- |
+| LED 1 | 0           |
+| LED 2 | 1           |
+| LED 3 | 6           |
 
 ## Schematic
 
@@ -65,11 +70,4 @@ The complete hardware schematic can be found below.
 * Hardware experimentation
 * Educational projects
 * Custom USB devices
-
-## Project Status
-
-🚧 Currently under development.
-
-## License
-
-This project is released under the MIT License.
+* ! Working On AI API's Saving !
