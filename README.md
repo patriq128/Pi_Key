@@ -51,11 +51,11 @@ The complete hardware schematic can be found below.
 
 ### Front Side
 
-![Pi\_Key Front](images/front.jpg)
+![Pi\_Key Front](images/front.png)
 
 ### Back Side
 
-![Pi\_Key Back](images/back.jpg)
+![Pi\_Key Back](images/back.png)
 
 ## Applications
 
