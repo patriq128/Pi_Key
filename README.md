@@ -32,11 +32,12 @@ The device features three status LEDs and a microSD card interface, making it su
 | MOSI        | 3           |
 | MISO        | 4           |
 | SCK         | 2           |
-| CS          | 5         |
+| CS          | 5           |
 
 ### Button Connection
 
 | BUTTON | GPIO 15 |
+| ------ | ------- |
 
 
 ### LED Connections
