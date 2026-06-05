@@ -5,11 +5,12 @@
 storage_tool = False
 
 from machine import Pin, SPI # type: ignore
-import libarys.sdcard as sdcard
+import sdcard
 import os
 import time
 import urandom # type: ignore
 import sys
+import json
 
 # inicializing LEDs
 led_1 = Pin(0, Pin.OUT)
@@ -98,12 +99,12 @@ def what_can_do():
         msg = sys.stdin.readline().strip()
         if msg == "what_can_do":
             led_3.value(1)
-            if sdcard_if and not "password.txt" in os.listdir("/sd"):
+            if sdcard_if and not "password.txt" in os.listdir("/"):
                 make_password = True
             else:
                 make_password = False
                 
-            if sdcard_if and "password.txt" in os.listdir("/sd"):
+            if sdcard_if and "password.txt" in os.listdir("/"):
                 new_password = True
             else:
                 new_password = False
@@ -127,7 +128,69 @@ def what_can_do():
                 edit_files = True
             else:
                 edit_files = False
-            print(f"{make_password}\n{new_password}\n{make_apis}\n{edit_apis}\n{read_history}\n{edit_files}")
+            print(f"{make_password}\n{new_password}\n{make_apis}\n{edit_apis}\n{read_history}\n{edit_files}\nokay")
+            break
+
+def make_password():
+    print("nice")
+
+def new_password():
+    print("nice")
+
+def make_api():
+    while True:
+        msg = sys.stdin.readline().strip()
+        line1 = sys.stdin.readline().strip()
+        line2 = sys.stdin.readline().strip()
+
+        if msg:
+            if not "apis.json" in os.listdir("/sd"):
+                payload = {"Name": msg, "Type": line1, "API": line2}
+                with open("/sd/apis.json", "w") as f:
+                    json.dump(payload, f)
+
+            else:
+                with open("/sd/apis.json", "r") as f:
+                    payload = json.load(f)
+                payload.append({"Name": msg, "Type": line1, "API": line2})
+                with open("/sd/apis.json", "w") as f:
+                    json.dump(payload, f)
+            break
+
+def chat_ai():
+    with open("/sd/apis.json", "r") as f:
+        data = json.load(f)
+    print(f"{data["Name"]}\n")
+    print(f"{data["Type"]}\n")
+    print(f"{data["API"]}")
+
+def edit_api():
+    print("nice")
+
+def read_history():
+    print("nice")
+
+def edit_files():
+    print("nice")
+
+def wait_next():
+    while True:
+        msg = sys.stdin.readline().strip()
+        if msg == "make_password":
+            make_password()
+        if msg == "new_password":
+            new_password()
+        if msg == "make_api":
+            make_api()
+        if msg == "chat_ai":
+            chat_ai()
+        if msg == "edit_api":
+            edit_api()
+        if msg == "read_histroy":
+            read_history()
+        if msg == "edit_files":
+            edit_files()
+        if msg:
             break
 
 # this just read file idk
@@ -145,6 +208,7 @@ def main():
             print(f"okay\n{sdcard_if}")
             break
     what_can_do()
+    wait_next()
 
 # this is something like main
 def boot_start():
