@@ -4,6 +4,7 @@ import platform
 import time
 import keyboard
 import requests
+import json
 
 os_type = platform.system()
 
@@ -55,7 +56,7 @@ def connect_device():
                 sd_card = False
                 print(f"SD Card detected: {sd_card}")
                 
-            time.sleep(3)
+            time.sleep(1)
 
             for i in range(3):
                 for i in range(4):
@@ -73,6 +74,7 @@ def new_password():
     ser.write(b"new_password\n")
 
 def make_api():
+    print("\033c", end="")
     global ser
     name = input("Name of API: ")
     type_ai = input("Type of AI: ")
@@ -82,38 +84,155 @@ def make_api():
     ser.write(f"{name}\n{type_ai}\n{api_key}\n".encode())
 
 def chat_ai():
+    print("\033c", end="")
     global ser
     ser.write(b"chat_ai\n")
+    names = []
+
     while True:
-        line1 = ser.readline().decode().strip()
-        line2 = ser.readline().decode().strip()
-        line3 = ser.readline().decode().strip()
+        line = ser.readline().decode(errors="ignore").strip()
+
+        if line:
+            if line != "---":
+                names.append(line)
+            else:
+                break
+
+    for i, name in enumerate(names):
+        print(f"{i}: {name}")
+
+    picked = None
+
+    choice = input("Pick AI: ").strip()
+
+    if choice.isdigit():
+        idx = int(choice)
+
+        if 0 <= idx < len(names):
+            picked = names[idx]
+            print("Picked:", picked)
+        else:
+            print("wrong number")
+    else:
+        print("This is not number")
+        
+    if picked:
+        ser.write((picked + "\n").encode())
+
+    while True:
+        line1 = ser.readline().decode(errors="ignore").strip()
+        line2 = ser.readline().decode(errors="ignore").strip()
 
         if line1:
-            name = line1
+            api = line1
             type_nice = line2
-            api = line3
             break
-        
-    input_user = input("write something: ")
-    response = requests.post(
-        "https://openrouter.ai/api/v1/chat/completions",
-        headers={
-            "Authorization": api,
-            "Content-Type": "application/json"
-        },
-        json={
-            "model": type_nice,
-            "messages": [
-                {
-                    "role": "user",
-                    "content": input_user
-                }
-            ]
-        }
-    )
 
-    print(response.json()["choices"][0]["message"]["content"])
+    
+    names = ["New chat"]
+    ser.write(b"history\n")
+    while True:
+        line = ser.readline().decode(errors="ignore").strip()
+
+        if line:
+            if line != "---":
+                names.append(line)
+            else:
+                break
+
+    for i, name in enumerate(names):
+        print(f"{i}: {name}")
+
+    picked = None
+
+    choice = input("Pick History: ").strip()
+
+    if choice.isdigit():
+        idx = int(choice)
+
+        if 0 <= idx < len(names):
+            picked = names[idx]
+            print("Picked:", picked)
+        else:
+            print("wrong number")
+    else:
+        print("This is not number")
+        
+    if picked == "New chat":
+        ser.write(b"next")
+    else:
+        ser.write((picked + "\n").encode())
+    
+
+    while True:
+        line1 = ser.readline().decode(errors="ignore").strip()
+        if line1:
+            if line1 == "new":
+                messages = [] 
+                chat_name = None
+                first_message = True
+            else:
+                chat_name = picked
+                first_message = False
+                messages = json.loads(line1)
+            break
+
+    print(messages)
+
+    while True:
+        input_user = input("write something: ")
+
+        if input_user == "exit":
+            break
+
+        messages.append({
+            "role": "user",
+            "content": input_user
+        })
+
+        if first_message:
+            title_response = requests.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={
+                    "Authorization": "Bearer " + api,
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": type_nice,
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": "Generate a short title (maximum 3 words) for this chat: " + input_user
+                        }
+                    ]
+                }
+            )
+
+            chat_name = title_response.json()["choices"][0]["message"]["content"].strip()
+            first_message = False
+
+            ser.write((chat_name + "\n").encode())
+
+        response = requests.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": "Bearer " + api,
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": type_nice,
+                "messages": messages
+            }
+        )
+
+        bot_reply = response.json()["choices"][0]["message"]["content"]
+        ser.write((json.dumps(messages) + "\n").encode())
+        print("AI:", bot_reply)
+
+        messages.append({
+            "role": "assistant",
+            "content": bot_reply
+        })
 
 def edit_api():
     ser.write(b"edit_api\n")

@@ -144,25 +144,82 @@ def make_api():
         line2 = sys.stdin.readline().strip()
 
         if msg:
+            new = {"Name": msg, "Type": line1, "API": line2}
             if not "apis.json" in os.listdir("/sd"):
-                payload = {"Name": msg, "Type": line1, "API": line2}
-                with open("/sd/apis.json", "w") as f:
-                    json.dump(payload, f)
-
+                data = []
             else:
                 with open("/sd/apis.json", "r") as f:
-                    payload = json.load(f)
-                payload.append({"Name": msg, "Type": line1, "API": line2})
-                with open("/sd/apis.json", "w") as f:
-                    json.dump(payload, f)
+                    try:
+                        data = json.load(f)
+                    except:
+                        data = []
+                
+            data.append(new)
+            with open("/sd/apis.json", "w") as f:
+                json.dump(data, f)
             break
 
 def chat_ai():
     with open("/sd/apis.json", "r") as f:
         data = json.load(f)
-    print(f"{data["Name"]}\n")
-    print(f"{data["Type"]}\n")
-    print(f"{data["API"]}")
+    for item in data:
+        print(item["Name"])
+    print("---")
+
+    while True:
+        msg = sys.stdin.readline().strip()
+        if msg:
+            for item in data:
+                if item["Name"] == msg:
+                    print(item["API"])
+                    print(item["Type"])
+            break
+
+    while True:
+        msg = sys.stdin.readline().strip()
+        if msg == "history":
+            with open("/sd/history.json", "r") as f:
+                data = json.load(f)
+            for item in data:
+                print(item["Name"])
+            print("---")
+            break
+
+    while True:
+        msg = sys.stdin.readline().strip()
+        if msg != "next":
+            for item in data:
+                if item["Name"] == msg:
+                    print(item["Conversation"])
+            break
+        else:
+            print("new")
+            break
+
+    while True:
+        msg = sys.stdin.readline().strip()
+        if msg:
+            conversation_name = msg
+            break
+    
+    while True:
+        msg = sys.stdin.readline().strip()
+        if msg:
+            new = {"Name": conversation_name, "Conversation": msg }
+            if not "history.json" in os.listdir("/sd"):
+                data = []
+            else:
+                with open("/sd/history.json", "r") as f:
+                    try:
+                        data = json.load(f)
+                    except:
+                        data = []
+                
+            data.append(new)
+            with open("/sd/history.json", "w") as f:
+                json.dump(data, f)
+            break
+    
 
 def edit_api():
     print("nice")
@@ -210,10 +267,10 @@ def main():
     what_can_do()
     wait_next()
 
-# this is something like main
-def boot_start():
-    if button.value():
+nice_booting_animation = False # dont forget to turn it on
 
+def booting_animation():
+    if nice_booting_animation:
         for i in range(3):
             led_1.value(1)
             time.sleep(0.5)
@@ -234,6 +291,10 @@ def boot_start():
             led_2.value(0)
             led_3.value(0)
 
+# this is something like main
+def boot_start():
+    if button.value():
+        booting_animation()
         if sdcard_if:
             if "hello.txt" in os.listdir("/sd"):
                 main()
