@@ -178,22 +178,30 @@ def chat_ai():
     while True:
         msg = sys.stdin.readline().strip()
         if msg == "history":
-            with open("/sd/history.json", "r") as f:
-                data = json.load(f)
-            for item in data:
-                print(item["Name"])
-            print("---")
+            try:
+                with open("/sd/history.json", "r") as f:
+                    data = json.load(f)
+                for item in data:
+                    print(item["Name"])
+                print("---")
+            except:
+                data = []
+                print("---")
             break
 
     while True:
         msg = sys.stdin.readline().strip()
-        if msg != "next":
-            for item in data:
-                if item["Name"] == msg:
-                    print(item["Conversation"])
-            break
-        else:
-            print("new")
+        if msg:
+            if msg != "next":
+                for item in data:
+                    if item["Name"] == msg:
+                        print(item["Conversation"])
+                        still_name = True
+                
+            else:
+                led_3.value(0)
+                print("new")
+                still_name = False
             break
 
     while True:
@@ -205,6 +213,11 @@ def chat_ai():
     while True:
         msg = sys.stdin.readline().strip()
         if msg:
+            if still_name:
+                data = [item for item in data if item["Name"] != conversation_name]
+                with open("/sd/history.json", "w") as f:
+                    json.dump(data, f)
+
             new = {"Name": conversation_name, "Conversation": msg }
             if not "history.json" in os.listdir("/sd"):
                 data = []
@@ -218,7 +231,7 @@ def chat_ai():
             data.append(new)
             with open("/sd/history.json", "w") as f:
                 json.dump(data, f)
-            break
+
     
 
 def edit_api():

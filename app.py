@@ -159,7 +159,7 @@ def chat_ai():
         print("This is not number")
         
     if picked == "New chat":
-        ser.write(b"next")
+        ser.write(b"next\n")
     else:
         ser.write((picked + "\n").encode())
     
@@ -175,12 +175,13 @@ def chat_ai():
                 chat_name = picked
                 first_message = False
                 messages = json.loads(line1)
+                ser.write((chat_name + "\n").encode())
             break
 
     print(messages)
 
     while True:
-        input_user = input("write something: ")
+        input_user = input("You => ")
 
         if input_user == "exit":
             break
@@ -211,7 +212,7 @@ def chat_ai():
             chat_name = title_response.json()["choices"][0]["message"]["content"].strip()
             first_message = False
 
-            ser.write((chat_name + "\n").encode())
+        ser.write((chat_name + "\n").encode())
 
         response = requests.post(
             "https://openrouter.ai/api/v1/chat/completions",
@@ -226,13 +227,13 @@ def chat_ai():
         )
 
         bot_reply = response.json()["choices"][0]["message"]["content"]
-        ser.write((json.dumps(messages) + "\n").encode())
-        print("AI:", bot_reply)
+        print("AI => ", bot_reply, "\n")
 
         messages.append({
             "role": "assistant",
             "content": bot_reply
         })
+        ser.write((json.dumps(messages) + "\n").encode())
 
 def edit_api():
     ser.write(b"edit_api\n")
