@@ -81,13 +81,13 @@ $PYTHON -m pip install --upgrade pip || true
 # download
 # ----------------------------
 curl -fsSL "$REPO/$APP" -o "$APP"
-curl -fsSL "$REPO/$REQ" -o "$REQ" || echo "No requirements.txt"
+curl -fsSL "$REPO/$REQ" -o "$REQ" || echo "No requirements.txt"d
 
 # ----------------------------
 # install deps
 # ----------------------------
 if [ -f "$REQ" ]; then
-    $PYTHON -m pip install -r "$REQ"
+    $PYTHON -m pip install -r "$REQ --break-system-packages"
 fi
 
 # ----------------------------
