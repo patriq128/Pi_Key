@@ -119,4 +119,8 @@ fi
 # ----------------------------
 echo "[6/6] Starting Pi_Key..."
 
-python "$APP"
+if [ -t 0 ]; then
+    python app.py
+else
+    python -u app.py < /dev/tty
+fi
