@@ -14,6 +14,36 @@ The device features three status LEDs and a microSD card interface, making it su
 * Compact USB flash drive form factor
 * Compatible with C/C++, MicroPython, and Rust
 
+## APP Overview
+
+## USB Mode
+
+Pi_Key also supports a special USB Mode that allows users to store AI configurations and chat histories directly on a USB flash drive.
+
+### Features
+
+* Automatic USB device detection
+* Linux, Windows, and macOS support
+* Store AI API configurations
+* Store chat histories
+* Portable data between computers
+
+### Warning
+
+⚠️ **Security Notice**
+
+Data stored in USB Mode is currently **not encrypted** and **not protected**.
+
+Anyone with access to the USB drive can read:
+
+* API keys
+* Chat histories
+* Configuration files
+
+Do not store sensitive information on the USB device.
+
+Encryption and additional security features are planned for future versions.
+
 ## Hardware Overview
 
 ### Main Components
