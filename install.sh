@@ -114,7 +114,7 @@ fi
 
 echo "[4/5] Installing dependencies..."
 
-python -m pip install --upgrade pip
+python -m pip install --upgrade pip --break-system-packages
 
 if [ -f "$REQ" ]; then
     pip install -r "$REQ --break-system-packages"
