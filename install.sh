@@ -45,13 +45,13 @@ else
     exit 1
 fi
 
-echo "[1/6] Detected platform: $PLATFORM"
+echo "[1/5] Detected platform: $PLATFORM"
 
 # ----------------------------
 # PYTHON DETECTION
 # ----------------------------
 
-echo "[2/6] Checking Python..."
+echo "[2/5] Checking Python..."
 
 if command -v python3 >/dev/null 2>&1; then
     PYTHON=python3
@@ -97,7 +97,7 @@ echo "Using: $($PYTHON --version)"
 # DOWNLOAD FILES
 # ----------------------------
 
-echo "[3/6] Downloading files..."
+echo "[3/5] Downloading files..."
 
 curl -fsSL "$REPO/$APP" -o "$APP"
 
@@ -107,33 +107,24 @@ else
     echo "requirements.txt not found."
 fi
 
-# ----------------------------
-# VIRTUAL ENVIRONMENT
-# ----------------------------
-
-echo "[4/6] Creating virtual environment..."
-
-$PYTHON -m venv venv
-
-source venv/bin/activate
 
 # ----------------------------
 # INSTALL DEPENDENCIES
 # ----------------------------
 
-echo "[5/6] Installing dependencies..."
+echo "[4/5] Installing dependencies..."
 
 python -m pip install --upgrade pip
 
 if [ -f "$REQ" ]; then
-    pip install -r "$REQ"
+    pip install -r "$REQ --break-system-packages"
 fi
 
 # ----------------------------
 # START APPLICATION
 # ----------------------------
 
-echo "[6/6] Starting Pi_Key..."
+echo "[5/5] Starting Pi_Key..."
 
 if [ -e /dev/tty ]; then
     python "$APP" < /dev/tty
